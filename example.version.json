@@ -1,0 +1,13 @@
+{
+  "latest": "0.7.8-stable-engineering",
+  "version": "0.7.8",
+  "codename": "stable-engineering",
+  "package": "codew-v0.7.8-stable-engineering.zip",
+  "download_url": "https://releases.invalid/releases/download/v0.7.8/codew-v0.7.8-stable-engineering.zip",
+  "sha256": "REPLACE_WITH_SHA256_AFTER_ZIP_BUILD",
+  "changelog": [
+    "以 VERSION 为源码版本基准，统一前端、后端、Agent 与安装版本",
+    "区分开发状态与 release 状态，构建前检查源码版本，构建后校验发布包 SHA256",
+    "保留已有 BBR 改动，不修改 Xray、Reality、数据库业务逻辑或 Agent 通信协议"
+  ]
+}

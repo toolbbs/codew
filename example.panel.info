@@ -1,0 +1,8 @@
+# Example only. Do not commit the real /etc/codew/panel.info file.
+
+PANEL_URL=http://SERVER_PUBLIC_IP:2053
+PANEL_PORT=2053
+ADMIN_USER=admin
+ADMIN_PASSWORD=change-me
+INSTALL_DIR=/opt/codew
+UPDATE_MANIFEST_URL=https://raw.githubusercontent.com/toolbbs/codew/main/version.json

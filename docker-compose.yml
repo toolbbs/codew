@@ -1,0 +1,35 @@
+services:
+  codew-api:
+    build:
+      context: ./backend
+    container_name: codew-api
+    ports:
+      - "127.0.0.1:${API_PORT:-8088}:8088"
+    environment:
+      - CODEW_API_ADDR=0.0.0.0:8088
+      - CODEW_JWT_SECRET=${CODEW_JWT_SECRET:-change-me-please}
+      - CODEW_AGENT_SHARED_SECRET=${CODEW_AGENT_SHARED_SECRET:-change-agent-secret}
+      - CODEW_ADMIN_USERNAME=${CODEW_ADMIN_USERNAME:-admin}
+      - CODEW_ADMIN_PASSWORD=${CODEW_ADMIN_PASSWORD:-admin123}
+      - CODEW_DB_PATH=/app/data/codew.json
+      - CODEW_LOCAL_SERVER_IP=${CODEW_LOCAL_SERVER_IP:-127.0.0.1}
+      - CODEW_LOCAL_SERVER_HOST=${CODEW_LOCAL_SERVER_HOST:-127.0.0.1}
+      - CODEW_LOCAL_SERVER_NAME=${CODEW_LOCAL_SERVER_NAME:-本机服务器}
+      - CODEW_LOCAL_SERVER_REGION=${CODEW_LOCAL_SERVER_REGION:-Local}
+      - CODEW_LOCAL_SERVER_PROVIDER=${CODEW_LOCAL_SERVER_PROVIDER:-Self-hosted}
+      - CODEW_UPDATE_MANIFEST_URL=${CODEW_UPDATE_MANIFEST_URL:-}
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  codew-frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_BASE_PATH: "/${WEB_BASE_PATH:-codew}/"
+    container_name: codew-frontend
+    ports:
+      - "127.0.0.1:${WEB_PORT:-5173}:5173"
+    depends_on:
+      - codew-api
+    restart: unless-stopped

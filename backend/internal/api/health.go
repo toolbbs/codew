@@ -1,0 +1,8 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+package api
+
+import "net/http"
+
+func (r *Router) health(w http.ResponseWriter, req *http.Request) {
+	writeJSON(w, http.StatusOK, map[string]string{"status": "ok", "service": "codew-api", "version": panelVersion})
+}
