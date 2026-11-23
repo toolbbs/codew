@@ -1,0 +1,14 @@
+{
+  "latest": "0.7.8-stable-engineering",
+  "version": "0.7.8",
+  "codename": "stable-engineering",
+  "package": "codew-v0.7.8-stable-engineering.zip",
+  "download_url": "https://github.com/toolbbs/codew/releases/download/v0.7.8/codew-v0.7.8-stable-engineering.zip",
+  "sha256": "f46552d2dc03c172ef52a2b140a70c3511bd4333f567732d9f0bee32cc475891",
+  "changelog": [
+    "Codew v0.7.8：支持 Ubuntu 22.04 amd64 的 fast/systemd 全新安装。",
+    "本地 ZIP 安装、重启和经预发布测试清单的在线安装已完成真机验证。",
+    "已知问题：BBR 已开启时，安装日志仍可能误报未开启；不影响实际启用。",
+    "在线升级、旧 ZXY Panel 原地迁移及其他系统架构尚未验收。"
+  ]
+}

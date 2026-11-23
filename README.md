@@ -2,16 +2,12 @@
 
 codew 是一个面向跨境业务网络节点管理的控制台，用于统一管理专线模式、中转入口、落地出口、固定出口客户、SOCKS5 路由中转、Clash/Mihomo 订阅和网络核心状态。
 
-本工作树处于 Codew 2C 本地候选阶段，尚未对外发布，也未完成真机验收。下面的旧品牌发布记录不代表 Codew 已发布。
-
 ## 当前版本
 
 - 源码开发版本：`0.7.8-stable-engineering`
-- 旧品牌正式发布：`0.7.8-stable-engineering`；标签 `v0.7.8`，包名 `zxy-panel-v0.7.8-stable-engineering.zip`。
-- 发布时间：`2026-10-07`；实际下载和 Latest 状态以 GitHub Release 为准，保留 `v0.7.8-test.1` 测试预发布及历史证据。
-- 旧品牌 V0.7.8 已验证范围：Ubuntu 22.04、Linux amd64、fast/systemd，升级起点为 V0.7.7.5。该结果不覆盖 Codew 改名后的安装和升级。
-- Debian 12、Docker、更早版本升级和整机快照回滚未完成本轮真机验收，不扩大兼容承诺。
-- 正式发布计划、验收证据边界和已知问题见 [V0.7.8 发布说明](docs/releases/v0.7.8.md)。
+- 已发布版本：`0.7.8-stable-engineering`（Codew 首版），见 [GitHub Release v0.7.8](https://github.com/toolbbs/codew/releases/tag/v0.7.8)。
+- 首版仅支持 **Ubuntu 22.04 LTS、x86_64（amd64）、fast/systemd 全新安装**。本地 ZIP 安装和重启，以及使用预发布测试清单的在线安装和客户端联网已通过真机验证。
+- 在线升级、旧 ZXY Panel 原地迁移、Debian、Docker、其他架构和跨模式切换不在本次验收范围内。下方旧品牌发布记录仅供历史参考。
 
 ## 功能列表
 
@@ -33,17 +29,33 @@ codew 是一个面向跨境业务网络节点管理的控制台，用于统一�
 
 ## 一键安装
 
-暂无 Codew 公开一键安装入口。根安装脚本必须显式设置 `CODEW_UPDATE_MANIFEST_URL`，不会回退到旧仓库。它校验 HTTPS 清单、Codew 包名、SHA256 和 ZIP 后，在临时目录调用部署脚本。候选清单里的 `releases.invalid` 是保留的示例地址，不能安装。真机测试和新仓库发布需要单独验收。
+只在未安装过 Codew 或 ZXY Panel 的 Ubuntu 22.04 x86_64 服务器上执行。先创建整机快照，再以 root 身份在 SSH 终端整段粘贴。命令会校验固定版本的安装脚本，通过正式清单下载并校验 ZIP，安装缺少的依赖并启动服务。
 
-## 一键升级
+```bash
+f=$(mktemp /tmp/codew-install.XXXXXX) &&
+curl -fsSL --proto '=https' --proto-redir '=https' -o "$f" \
+  'https://raw.githubusercontent.com/toolbbs/codew/ae693d4df4fd5e1dcd5bb3acc8769070dfcd41fd/install.sh' &&
+printf '%s  %s\n' '7350b7029e903dad326ffdb52caee0e2ee624e18cae59c90f07756d299b15606' "$f" | sha256sum -c - &&
+CODEW_INSTALL_MODE=fast FRESH_INSTALL=false \
+  CODEW_UPDATE_MANIFEST_URL='https://raw.githubusercontent.com/toolbbs/codew/main/version.json' \
+  bash "$f"
+```
 
-该命令检查清单并打印待审核的升级命令，不会立即安装。生成命令先验证 SHA256 和 ZIP 路径，再执行安装器；安装失败不会被日志管道隐藏。相同或更高版本不生成降级命令，自定义 APP_DIR/CONFIG_DIR 会带入命令。详见 [升级说明](docs/UPGRADE.md)。
+安装完成后请更换管理员密码。不要公开包含密码、Token、完整面板入口或节点链接的安装日志。如果安装报错，先保留脱敏日志，不要直接重复执行。
+
+## 升级与迁移
+
+首版未验收在线升级或旧品牌迁移。以下命令仅检查更新并在存在可升级版本时输出供审核的命令，不会直接执行安装：
 
 ```bash
 codew update
 ```
 
-不支持用 Codew 候选覆盖旧品牌安装。旧版迁移、跨模式切换不属于 2C。
+不要用本版安装器覆盖旧 ZXY Panel，也不要把找到更新视为升级已通过验收。
+
+## 已知问题
+
+安装日志偶尔会在 BBR 实际开启时误报未开启。请以 `codew-netopt bbr-status` 的实际状态为准；显示 `Enabled: true` 时不需要重复开启或重装。
 
 ## 常用命令
 
@@ -112,16 +124,9 @@ Clash Verge 首页显示的“来源：服务器IP:面板端口”是订阅源�
 
 ## 发布一致性说明
 
-`VERSION` 是源码版本基准。当前 Codew 尚未正式发布，仓库根目录不包含正式更新清单 `version.json`，也不沿用旧品牌的清单。Codew 本地候选使用独立的 `version.fast.json` 和 `SHA256SUMS`；ZIP 不内置这两个文件。
+`VERSION` 是源码版本基准。根目录 [`version.json`](version.json) 是 Codew 的正式清单，指向 `v0.7.8` 的已验收原版 ZIP。下载后可用 Release 中的 [`SHA256SUMS`](https://github.com/toolbbs/codew/releases/download/v0.7.8/SHA256SUMS) 核对完整性。
 
-以下是旧品牌的发布记录，仅供历史参考。旧品牌 V0.7.7.5 的升级验收不代表 Codew 支持从旧面板原地迁移：
-
-- 已发布版本：`0.7.8-stable-engineering`（旧品牌）
-- `latest`: `0.7.8-stable-engineering`
-- `version`: `0.7.8`
-- `codename`: `stable-engineering`
-- `package`: `zxy-panel-v0.7.8-stable-engineering.zip`
-- `tag`: `v0.7.8`
+预发布的 `version-test.json` 只供测试，不是正式入口。本地候选使用独立的 `version.fast.json` 和 `SHA256SUMS`；ZIP 不内置正式清单。
 
 开发状态检查（默认模式）验证源码版本和示例清单，未发布时无需根目录 `version.json`。正式清单存在时仍会检查其格式、包名、下载地址和 SHA256 字段：
 
